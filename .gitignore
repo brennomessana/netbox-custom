@@ -1,0 +1,4 @@
+# Non committare file con segreti
+*.secret
+*.env
+my_values_all.yaml

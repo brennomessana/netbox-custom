@@ -1,0 +1,101 @@
+###############################################################################
+# values-topology.yaml
+# Helm Values per NetBox con Plugin netbox-topology-views
+#
+# Questo file contiene TUTTI i tuoi values attuali + le aggiunte per il plugin.
+# Usalo con: helm upgrade netbox netbox-community/netbox -n netbox452 -f values-topology.yaml
+#
+# NOTA: Questo file SOSTITUISCE completamente i values precedenti.
+#       Tutte le tue configurazioni originali sono preservate qui sotto.
+###############################################################################
+
+# ===========================================================================
+# SEZIONE 1: Immagine Custom (NOVITA' - per il plugin)
+# ===========================================================================
+image:
+  registry: ghcr.io
+  repository: brennomessana/netbox-custom
+  tag: "v4.5.1-topology"
+  pullPolicy: Always  # Cambia in IfNotPresent dopo aver verificato che funziona
+
+# ===========================================================================
+# SEZIONE 2: Configurazione Plugin (NOVITA')
+# ===========================================================================
+plugins:
+  - netbox_topology_views
+
+pluginsConfig:
+  netbox_topology_views:
+    # Ruoli device pre-selezionati nella vista topologia
+    # Personalizza con i tuoi device roles effettivi
+    preselected_device_roles:
+      - "Router"
+      - "Firewall"
+      - "Switch"
+    # Nascondi connessioni logiche con singolo cavo
+    hide_single_cable_logical_conns: false
+    # Per opzioni aggiuntive vedi:
+    # https://github.com/netbox-community/netbox-topology-views#configuration
+
+# ===========================================================================
+# SEZIONE 3: Configurazioni Originali (PRESERVATE dal tuo deploy attuale)
+# ===========================================================================
+
+global:
+  security:
+    allowInsecureImages: true
+
+login:
+  secretKey: UnaSempliceStringaCasualePerIlRipristino
+
+# --- Probes ---
+startupProbe:
+  failureThreshold: 30
+  periodSeconds: 10
+
+livenessProbe:
+  failureThreshold: 15
+  timeoutSeconds: 10
+
+readinessProbe:
+  failureThreshold: 15
+  timeoutSeconds: 10
+
+# --- Risorse NetBox ---
+resources:
+  requests:
+    cpu: 500m
+    memory: 1Gi
+  limits:
+    cpu: 1500m
+    memory: 2Gi
+
+# --- Servizio ---
+service:
+  type: NodePort
+  nodePort: "32571"
+
+# --- PostgreSQL ---
+postgresql:
+  enabled: true
+  auth:
+    database: netbox
+    username: netbox
+    password: netbox
+  image:
+    registry: public.ecr.aws
+    repository: bitnami/postgresql
+    tag: 17
+  primary:
+    resources:
+      requests:
+        cpu: 500m
+        memory: 512Mi
+      limits:
+        cpu: 1000m
+        memory: 2Gi
+
+# --- Valkey (Redis) ---
+valkey:
+  enabled: true
+  architecture: standalone

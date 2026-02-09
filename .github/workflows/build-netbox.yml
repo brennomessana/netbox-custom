@@ -1,0 +1,68 @@
+###############################################################################
+# GitHub Actions Workflow: Build e Push immagine NetBox Custom
+#
+# Trigger:
+#   - Push su branch main (automatico)
+#   - Manuale via "Run workflow" nella UI di GitHub
+#
+# Cosa fa:
+#   1. Checkout del codice
+#   2. Login su GitHub Container Registry (ghcr.io)
+#   3. Build dell'immagine Docker con il plugin
+#   4. Push su ghcr.io/brennomessana/netbox-custom
+#
+# L'immagine risultante sarà:
+#   ghcr.io/brennomessana/netbox-custom:v4.5.1-topology
+#   ghcr.io/brennomessana/netbox-custom:latest
+###############################################################################
+
+name: Build NetBox Custom Image
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:  # Permette trigger manuale dalla UI GitHub
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: brennomessana/netbox-custom
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      packages: write  # Necessario per pushare su ghcr.io
+
+    steps:
+      # Step 1: Checkout del repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Login su GitHub Container Registry
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Step 3: Estrai metadata per i tag dell'immagine
+      - name: Extract metadata (tags, labels)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=v4.5.1-topology
+            type=raw,value=latest
+
+      # Step 4: Build e Push dell'immagine
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

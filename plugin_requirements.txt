@@ -1,0 +1,1 @@
+netbox-topology-views==4.5.0
