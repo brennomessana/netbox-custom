@@ -21,6 +21,9 @@ RUN /usr/local/bin/uv pip install --no-cache -r /opt/netbox/plugin_requirements.
 # Questo file viene sovrascritto al runtime dal ConfigMap di Helm
 RUN printf 'PLUGINS = ["netbox_topology_views"]\nPLUGINS_CONFIG = {}\n' > /etc/netbox/config/plugins.py
 
+# Icone custom netbox-topology-views
+COPY ./icons/ /opt/netbox/netbox/static/netbox_topology_views/img/
+
 # Raccoglie i file statici del plugin (CSS, JS necessari per disegnare la topologia)
 RUN SECRET_KEY="build-only-dummy-key-not-used-in-production-1234567890" \
     /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py collectstatic --no-input
