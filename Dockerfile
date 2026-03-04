@@ -27,3 +27,12 @@ COPY ./icons/ /opt/netbox/netbox/static/netbox_topology_views/img/
 # Raccoglie i file statici del plugin (CSS, JS necessari per disegnare la topologia)
 RUN SECRET_KEY="build-only-dummy-key-not-used-in-production-1234567890" \
     /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py collectstatic --no-input
+# Configura temporaneamente il plugin per collectstatic
+RUN printf 'PLUGINS = ["netbox_topology_views"]\nPLUGINS_CONFIG = {}\n' > /etc/netbox/config/plugins.py
+
+# Raccoglie i file statici
+RUN SECRET_KEY="build-only-dummy-key-not-used-in-production-1234567890" \
+    /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py collectstatic --no-input
+
+# RIMUOVI il plugins.py temporaneo — verrà montato da Helm al runtime
+RUN rm /etc/netbox/config/plugins.py
