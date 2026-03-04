@@ -55,7 +55,6 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            #type=raw,value=v4.5.1-topology
             type=raw,value=v4.5.1-topology-v2
             type=raw,value=latest
 

@@ -15,7 +15,7 @@
 image:
   registry: ghcr.io
   repository: brennomessana/netbox-custom
-  tag: "v4.5.1-topology"
+  tag: "v4.5.1-topology-v2"
   pullPolicy: Always  # Cambia in IfNotPresent dopo aver verificato che funziona
 
 # ===========================================================================
@@ -85,7 +85,7 @@ postgresql:
   image:
     registry: public.ecr.aws
     repository: bitnami/postgresql
-    tag: 17
+    tag: 18
   primary:
     resources:
       requests:
