@@ -26,6 +26,8 @@ plugins:
 
 pluginsConfig:
   netbox_topology_views:
+    allow_coordinates_saving: true     
+    always_save_coordinates: true
     # Ruoli device pre-selezionati nella vista topologia
     # Personalizza con i tuoi device roles effettivi
     preselected_device_roles:
