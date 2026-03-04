@@ -36,3 +36,7 @@ RUN SECRET_KEY="build-only-dummy-key-not-used-in-production-1234567890" \
 
 # RIMUOVI il plugins.py temporaneo — verrà montato da Helm al runtime
 RUN rm /etc/netbox/config/plugins.py
+
+# Patch vis-network: linee rette invece di curve
+RUN sed -i 's/smooth:{enabled:!0,type:"dynamic",forceDirection:"none",roundness:.5}/smooth:{enabled:!1,type:"dynamic",forceDirection:"none",roundness:.5}/g' \
+    /opt/netbox/netbox/static/netbox_topology_views/js/app.js
