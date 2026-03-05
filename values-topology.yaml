@@ -15,7 +15,7 @@
 image:
   registry: ghcr.io
   repository: brennomessana/netbox-custom
-  tag: "v4.5.1-topology-v5"
+  tag: "v4.5.1-topology-v6"
   pullPolicy: Always  # Cambia in IfNotPresent dopo aver verificato che funziona
 
 # ===========================================================================

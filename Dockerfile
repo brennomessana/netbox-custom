@@ -32,4 +32,8 @@ RUN SECRET_KEY="build-only-dummy-key-not-used-in-production-1234567890" \
 RUN rm /etc/netbox/config/plugins.py
 
 # Patch vis-network: linee rette invece di curve (tutte le occorrenze)
-RUN sed -i 's/smooth:{enabled:!0/smooth:{enabled:!1/g' /opt/netbox/netbox/static/netbox_topology_views/js/app.js
+RUN sed -i 's/smooth:{enabled:!0/smooth:{enabled:!1/g'  /opt/netbox/netbox/static/netbox_topology_views/js/app.js
+# Patch vis-network: disabilita fisica per layout statico
+RUN sed -i 's/physics:{enabled:!0/physics:{enabled:!1/g' /opt/netbox/netbox/static/netbox_topology_views/js/app.js
+
+
