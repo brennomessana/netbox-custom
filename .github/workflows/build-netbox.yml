@@ -55,7 +55,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=v4.5.1-topology-v3
+            type=raw,value=v4.5.1-topology-v5
             type=raw,value=latest
 
       # Step 4: Build e Push dell'immagine
